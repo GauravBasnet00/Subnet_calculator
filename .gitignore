@@ -3,3 +3,4 @@ a.out
 subnt.exe 
 a.exe
 *.swp
+.*.cpp.swp

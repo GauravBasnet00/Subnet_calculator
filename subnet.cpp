@@ -6,14 +6,15 @@ struct ipv4{
 	unsigned int first=0, second=0, third=0,fourth=0 , cidr=0;
 };	
 
-const ipv4 classA= {255,cidr=8};
-const ipv4 classB = {255,255,cidr=8};
-const ipv4 classC = {255,255,255,cidr=8};
+const ipv4 classA= {255,.cidr=8};
+const ipv4 classB = {255,255,.cidr=8};
+const ipv4 classC = {255,255,255,.cidr=8};
 
 using namespace std;
 
-ipv4 create_subnet(ipv4 given_ip){
+ipv4 create_subnet_mask(ipv4 given_ip){
 	ipv4 subnet_mask;
+	return ipv4;
 }
 
 int main(){
