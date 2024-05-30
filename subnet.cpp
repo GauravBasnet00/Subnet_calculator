@@ -3,12 +3,12 @@
 
 
 struct ipv4{
-	unsigned int first=0, second=0, third=0,fourth=0 , cidr=0;
+	unsigned int first, second, third,fourth, cidr;
 };	
 
-const ipv4 classA= {255,.cidr=8};
-const ipv4 classB = {255,255,.cidr=8};
-const ipv4 classC = {255,255,255,.cidr=8};
+const ipv4 classA= {255,0,0,0,8};
+const ipv4 classB = {255,255,0,0,16};
+const ipv4 classC = {255,255,255,0,24};
 
 using namespace std;
 
@@ -29,7 +29,7 @@ int main(){
 	cin>> given_ip.fourth;
 	cout<<"\nEnter the cidr : ";
 	cin>>given_ip.cidr;
-	system("clear");
+	
 	cout<<"\nThe given ip is : "<<"\t "<<given_ip.first<<"."<<given_ip.second;
 	cout<<"."<<given_ip.third<<"."<<given_ip.fourth<<"/"<<given_ip.cidr<<endl;	
 	return 0;
