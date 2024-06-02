@@ -21,6 +21,22 @@ struct subnet{
 	 subnet *next;
 };
 
+struct add_factor{
+	base_ip beg;
+	base_ip end;
+};
+
+
+const base_ip classA = {255,0,0,0};
+const base_ip classB = {255,255,0,0};
+const base_ip classC = {255,255,255,0};
+
+void match_subnet(){}
+
+subnet *create_subnet(ip_addr *subnetb, add_factor factor){}
+
+void create_subnetmast(ip_addr *ip){}
+
 int main(){
 	ip_addr user_ip;
 	cout<<"\nEnter the given ip and the cidr : "<<endl;
