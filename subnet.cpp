@@ -1,56 +1,42 @@
 #include <iostream>
 #include <cstdlib>
-
-struct ipv4
-{
-	unsigned int first, second, third, fourth, cidr;
-};
-
-const ipv4 classA = {255, 0, 0, 0, 8};
-const ipv4 classB = {255, 255, 0, 0, 16};
-const ipv4 classC = {255, 255, 255, 0, 24};
+#include <cmath>
 
 using namespace std;
 
-ipv4 create_subnet_mask(ipv4 given_ip)
-{
-	ipv4 subnet_mask;
-	int calc_class = given_ip.cidr / 8;
-	switch (calc_class)
-	{
-	case 1:
-		subnet_mask = classA;
-		break;
-	case 2:
-		subnet_mask = classB;
-		break;
-	case 3:
-		subnet_mask = classC;
-		break;
-	default:
-		break;
-	}
-	return subnet_mask;
-}
+struct base_ip{
+	unsigned int f_oct, s_oct, t_oct, fo_oct;
+};
 
-int main()
-{
-	ipv4 given_ip;
-	cout << "\nEnter the four octets of an ipv4 : " << "\nFirst octet : ";
-	cin >> given_ip.first;
-	cout << "\nSecond octet : ";
-	cin >> given_ip.second;
-	cout << "\nThird octet : ";
-	cin >> given_ip.third;
-	cout << "\nFouth octet : ";
-	cin >> given_ip.fourth;
-	cout << "\nEnter the cidr : ";
-	cin >> given_ip.cidr;
+struct ip_addr{
+	base_ip addr;
+	unsigned int cidr;
+	base_ip mask;
+};
 
-	cout << "\nThe given ip is : " << "\t " << given_ip.first << "." << given_ip.second;
-	cout << "." << given_ip.third << "." << given_ip.fourth << "/" << given_ip.cidr << endl;
-	ipv4 subnet = create_subnet_mask(given_ip);
-	cout << "\nThe Subnet is : " << "\t " << subnet.first << "." << subnet.second;
-	cout << "." << subnet.third << "." << subnet.fourth << "/" << subnet.cidr << endl;
+struct subnet{
+	 base_ip start;
+	 base_ip end;
+	 base_ip mask;
+	 subnet *next;
+};
+
+int main(){
+	ip_addr user_ip;
+	cout<<"\nEnter the given ip and the cidr : "<<endl;
+	cout<<"\nEnter the first octet : ";
+	cin>>user_ip.addr.f_oct;
+	cout<<"\nEnter the second octet : ";
+	cin >> user_ip.addr.s_oct;
+	cout<<"\nEnter the third octet : ";
+	cin>> user_ip.addr.t_oct;
+	cout<<"\nEnter the fourth octet : ";
+	cin>> user_ip.addr.fo_oct;
+	cout<<"\n\nEnter the cidr : ";
+	cin>> user_ip.cidr;
+	
+	cout<<"\n\nThe given ip is : \t";
+	cout<<user_ip.addr.f_oct<<"."<<user_ip.addr.s_oct<<"."<<user_ip.addr.t_oct;
+	cout<<"."<<user_ip.addr.fo_oct<<" /"<<user_ip.cidr<<endl;
 	return 0;
 }
