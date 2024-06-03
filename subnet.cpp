@@ -71,7 +71,7 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 			cout << ip->addr.fo_oct << "is inside the range" << endl;
 
 			cout << current->start.f_oct << "." << current->start.s_oct << "." << current->start.t_oct << ".";
-			cout << current->start.fo_oct << "is inside the range" << "-";
+			cout << current->start.fo_oct << "   -   ";
 
 			cout << current->end.f_oct << "." << current->end.s_oct << "." << current->end.t_oct << ".";
 			cout << current->end.fo_oct << endl;
