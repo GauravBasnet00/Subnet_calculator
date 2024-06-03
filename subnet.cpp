@@ -88,7 +88,18 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 }
 
 subnet *create_subnet(ip_addr *subnetb, add_factor factor)
-{
+{        subnet *new_subnet = new subnet;
+	 	for(i=1;i<=cidr;i++){
+			 new_subnet->start.f_oct = subnet->addr.f_oct + factor.beg.f_oct;
+			 new_subnet->start.s_oct = subnet->addr.s_oct + factor.beg.s_oct;
+   			 new_subnet->start.t_oct = subnet->addr.t_oct + factor.beg.t_oct;
+   			 new_subnet->start.fo_oct = subnet->addr.fo_oct + factor.beg.fo_oct;
+   			 
+   			new_subnet->end.f_oct = subnet->addr.f_oct + factor.end.f_oct;
+		    new_subnet->end.s_oct = subnet->addr.s_oct + factor.end.s_oct;
+		    new_subnet->end.t_oct = subnet->addr.t_oct + factor.end.t_oct;
+		    new_subnet->end.fo_oct = subnet->addr.fo_oct + factor.end.fo_oct;
+	}
 	return NULL;
 }
 
@@ -97,6 +108,7 @@ void create_subnetmask(ip_addr *ip)
 	add_factor R;
 	ip_addr network_add;
 	int cidr = ip->cidr;
+	network_add.cidr=cidr;
 	int q, r, mask_value = 0;
 	q = cidr / 8;
 	r = cidr % 8;
@@ -153,7 +165,7 @@ void create_subnetmask(ip_addr *ip)
 	cout<<network_add.addr.t_oct<<"."<<network_add.addr.fo_oct<<endl;
 	*/
 
-	subnet *sub_networks = create_subnet(ip, R);
+	subnet *sub_networks = create_subnet(&network_add, R);
 	match_subnet(ip, sub_networks);
 }
 
