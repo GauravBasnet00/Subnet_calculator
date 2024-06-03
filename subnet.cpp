@@ -33,7 +33,20 @@ const base_ip classC = {255,255,255,0};
 
 void match_subnet(){}
 
-subnet *create_subnet(ip_addr *subnetb, add_factor factor){}
+subnet *create_subnet(ip_addr *subnet, add_factor factor){
+		subnet *new_subnet = new subnet;
+	for(i=1;i<=cidr;i++){
+			 new_subnet->start.f_oct = subnet->addr.f_oct + factor.beg.f_oct;
+			 new_subnet->start.s_oct = subnet->addr.s_oct + factor.beg.s_oct;
+   			 new_subnet->start.t_oct = subnet->addr.t_oct + factor.beg.t_oct;
+   			 new_subnet->start.fo_oct = subnet->addr.fo_oct + factor.beg.fo_oct;
+   			 
+   			new_subnet->end.f_oct = subnet->addr.f_oct + factor.end.f_oct;
+		    new_subnet->end.s_oct = subnet->addr.s_oct + factor.end.s_oct;
+		    new_subnet->end.t_oct = subnet->addr.t_oct + factor.end.t_oct;
+		    new_subnet->end.fo_oct = subnet->addr.fo_oct + factor.end.fo_oct;
+	}
+}
 
 void create_subnetmast(ip_addr *ip){}
 
