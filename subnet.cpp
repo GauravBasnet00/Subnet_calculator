@@ -83,22 +83,22 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 	if (!found)
 	{
 		cout << "The given IP " << ip->addr.f_oct << "." << ip->addr.s_oct << "." << ip->addr.t_oct << ".";
-		cout << ip->addr.fo_oct << " does not belong to any subnet." << endl;
+		cout << ip->addr.fo_oct << " does not belong in any subnet." << endl;
 	}
 }
 
 subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 {        subnet *new_subnet = new subnet;
-	 	for(i=1;i<=cidr;i++){
-			 new_subnet->start.f_oct = subnet->addr.f_oct + factor.beg.f_oct;
-			 new_subnet->start.s_oct = subnet->addr.s_oct + factor.beg.s_oct;
-   			 new_subnet->start.t_oct = subnet->addr.t_oct + factor.beg.t_oct;
-   			 new_subnet->start.fo_oct = subnet->addr.fo_oct + factor.beg.fo_oct;
+	 	for(int i=1;i<=subnetb->cidr;i++){
+			 new_subnet->start.f_oct = subnetb->addr.f_oct + factor.beg.f_oct;
+			 new_subnet->start.s_oct = subnetb->addr.s_oct + factor.beg.s_oct;
+   			 new_subnet->start.t_oct = subnetb->addr.t_oct + factor.beg.t_oct;
+   			 new_subnet->start.fo_oct = subnetb->addr.fo_oct + factor.beg.fo_oct;
    			 
-   			new_subnet->end.f_oct = subnet->addr.f_oct + factor.end.f_oct;
-		    new_subnet->end.s_oct = subnet->addr.s_oct + factor.end.s_oct;
-		    new_subnet->end.t_oct = subnet->addr.t_oct + factor.end.t_oct;
-		    new_subnet->end.fo_oct = subnet->addr.fo_oct + factor.end.fo_oct;
+   			new_subnet->end.f_oct = subnetb->addr.f_oct + factor.end.f_oct;
+		    new_subnet->end.s_oct = subnetb->addr.s_oct + factor.end.s_oct;
+		    new_subnet->end.t_oct = subnetb->addr.t_oct + factor.end.t_oct;
+		    new_subnet->end.fo_oct = subnetb->addr.fo_oct + factor.end.fo_oct;
 	}
 	return NULL;
 }
