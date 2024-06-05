@@ -89,18 +89,39 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 
 subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 {        subnet *new_subnet = new subnet;
+		 subnet *pfirst = NULL;
+		 subnet *pthis = NULL;
+	
+	
 	 	for(int i=1;i<=subnetb->cidr;i++){
-			 new_subnet->start.f_oct = subnetb->addr.f_oct + factor.beg.f_oct;
-			 new_subnet->start.s_oct = subnetb->addr.s_oct + factor.beg.s_oct;
-   			 new_subnet->start.t_oct = subnetb->addr.t_oct + factor.beg.t_oct;
-   			 new_subnet->start.fo_oct = subnetb->addr.fo_oct + factor.beg.fo_oct;
+			new_subnet->start.f_oct = subnetb->addr.f_oct + factor.beg.f_oct;
+			new_subnet->start.s_oct = subnetb->addr.s_oct + factor.beg.s_oct;
+   			new_subnet->start.t_oct = subnetb->addr.t_oct + factor.beg.t_oct;
+   			new_subnet->start.fo_oct = subnetb->addr.fo_oct + factor.beg.fo_oct;
    			 
    			new_subnet->end.f_oct = subnetb->addr.f_oct + factor.end.f_oct;
 		    new_subnet->end.s_oct = subnetb->addr.s_oct + factor.end.s_oct;
 		    new_subnet->end.t_oct = subnetb->addr.t_oct + factor.end.t_oct;
 		    new_subnet->end.fo_oct = subnetb->addr.fo_oct + factor.end.fo_oct;
-	}
-	return NULL;
+			
+			new_subnet -> next = NULL;
+
+		if (pfirst==NULL){
+				pfirst = new_subnet;
+				}
+				
+				else{
+				pthis = pfirst;
+				
+				while(pthis->next != NULL){
+				pthis = pthis->next;
+				}
+
+				pthis->next = new_subnet;
+				
+				}
+		}
+	return pfirst;
 }
 
 void create_subnetmask(ip_addr *ip)
