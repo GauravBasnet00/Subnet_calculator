@@ -75,6 +75,16 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 
 			cout << current->end.f_oct << "." << current->end.s_oct << "." << current->end.t_oct << ".";
 			cout << current->end.fo_oct << endl;
+			if( ip->addr.f_oct == current->start.f_oct && ip->addr.s_oct == current->start.s_oct &&
+				ip->addr.t_oct == current->start.t_oct && ip->addr.fo_oct == current->start.fo_oct ){
+				cout<<"It is not an usable IP as it is a network address.";
+			}
+			else if( ip->addr.f_oct == current->end.f_oct && ip->addr.s_oct == current->end.s_oct &&
+				ip->addr.t_oct == current->end.t_oct && ip->addr.fo_oct == current->end.fo_oct ){
+				cout<<"It is not an usable IP as it is a broadcast address.";
+			}
+			else
+				cout<<"It is a usable address";
 			found = true;
 			
 		}

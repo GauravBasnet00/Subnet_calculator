@@ -25,6 +25,6 @@ The main features of this project are:
 
 ## **Preview**
 
-![Sample Output](./Images/Output-Preview.png)
+![Sample Output](./Images/Output.png)
 
 <p align='center'>Sample Output</p>
