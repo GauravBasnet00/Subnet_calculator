@@ -72,11 +72,12 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 			cout << "The given ip \t" << ip->addr.f_oct << "." << ip->addr.s_oct << "." << ip->addr.t_oct << ".";
 			cout << ip->addr.fo_oct << "\tis inside the range" << endl;
 
-			cout << current->start.f_oct << "." << current->start.s_oct << "." << current->start.t_oct << ".";
-			cout << current->start.fo_oct << "   -   ";
+			print_octets(current->start);
+			cout << "   -   ";
 
-			cout << current->end.f_oct << "." << current->end.s_oct << "." << current->end.t_oct << ".";
-			cout << current->end.fo_oct << endl;
+			print_octets(current->end);
+			cout << endl;
+
 			if( ip->addr.f_oct == current->start.f_oct && ip->addr.s_oct == current->start.s_oct &&
 				ip->addr.t_oct == current->start.t_oct && ip->addr.fo_oct == current->start.fo_oct ){
 				cout<<"It is not an usable IP as it is a network address.";
@@ -136,15 +137,15 @@ void list_traverse(subnet *list){
 	}
 }
 
-subnet *create_subnet(ip_addr *subnetb, add_factor factor){        
+subnet *create_subnet(ip_addr *subnet_id, add_factor factor){        
 		subnet *new_subnet;
 		subnet *pfirst  = NULL;
 		subnet *pthis = NULL;
-	 	subnet subnet_t ;
-		subnet_t.start = subnetb->addr;
-	 	add_factor news = factor;
+	 	subnet subnet_temp ;
+		subnet_temp.start = subnet_id->addr;
+	 	add_factor original = factor;
 		factor.beg = null_class;   // it is set to null class as an exception to generate the first subnetid 
-		int cidr = subnetb->cidr;
+		int cidr = subnet_id->cidr;
 	 	int x = cidr % 8;
 		int y = pow(2,x);	
 	
@@ -152,22 +153,22 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor){
 
 			new_subnet = new subnet;
 			new_subnet->next = NULL;
-			new_subnet->cidr = subnetb->cidr;
+			new_subnet->cidr = cidr;
 	
-			new_subnet->start.f_oct = subnet_t.start.f_oct + factor.beg.f_oct;
-			new_subnet->start.s_oct = subnet_t.start.s_oct + factor.beg.s_oct;
-   			new_subnet->start.t_oct = subnet_t.start.t_oct + factor.beg.t_oct;
-   			new_subnet->start.fo_oct = subnet_t.start.fo_oct + factor.beg.fo_oct;
+			new_subnet->start.f_oct = subnet_temp.start.f_oct + factor.beg.f_oct;
+			new_subnet->start.s_oct = subnet_temp.start.s_oct + factor.beg.s_oct;
+   			new_subnet->start.t_oct = subnet_temp.start.t_oct + factor.beg.t_oct;
+   			new_subnet->start.fo_oct = subnet_temp.start.fo_oct + factor.beg.fo_oct;
    			 
    			new_subnet->end.f_oct = new_subnet->start.f_oct + factor.end.f_oct;
 		    new_subnet->end.s_oct = new_subnet->start.s_oct + factor.end.s_oct;
 		    new_subnet->end.t_oct = new_subnet->start.t_oct + factor.end.t_oct;
 		    new_subnet->end.fo_oct = new_subnet->start.fo_oct + factor.end.fo_oct;
-		 	subnet_t = *new_subnet;		
+		 	subnet_temp = *new_subnet;		
 
 		if (pfirst==NULL){
 				pfirst = new_subnet;
-				factor.beg = news.beg;
+				factor = original;
 		}
 				
 		else{
@@ -186,7 +187,7 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor){
 	cout<<"Total no of hosts : "<<pow(2,32-cidr);
 	cout<<"\nTotal no of sub-nets : "<< y; 	
 	cout<<"\nSubnet Mask : ";
-	print_octets(subnetb->mask);
+	print_octets(subnet_id->mask);
 	cout<<endl;
 
 	list_traverse(pfirst);
@@ -202,7 +203,8 @@ void create_subnetmask(ip_addr *ip)
 	int q, r, mask_value = 0;
 	q = cidr / 8;
 	r = cidr % 8;
-	int no_hosts = pow(2, 8 - r);
+	int no_hosts = pow(2, 8 - r);  
+	//no_hosts here don't indicate the total no of hosts in the network rather it denotes the total no of bits of the octet to be used for the hosts
 
 	for (int i = 0; i < r; i++)
 		mask_value += pow(2, 7 - i);
