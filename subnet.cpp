@@ -107,7 +107,7 @@ void list_traverse(subnet *list){
 	else {
 		subnet  *pthis = list;
 		int i=1;
-		cout<<endl;
+		cout<<endl<<endl;
 		cout<<"Index\t Network Id \t\tBroadcast Id"<<endl<<endl;
 		while (pthis != NULL){
 			cout<<i<<". \t  ";
@@ -128,8 +128,8 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 		 subnet_t.start = subnetb->addr;
 	 	 add_factor news = factor;
 		 factor.beg = null_class;
-
-	 	int x = subnetb->cidr % 8;
+		int cidr = subnetb->cidr;
+	 	int x = cidr % 8;
 		int y = pow(2,x);	
 	
 	 	for(int i=1;i<=y;i++) {
@@ -166,8 +166,8 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 	}	
 	
 	cout<<endl<<endl;
-	cout<<"Total no of hosts : "<<pow(2,8-x);
-	cout<<"\nTotal no of subsets : "<< y; 	
+	cout<<"Total no of hosts : "<<pow(2,32-cidr);
+	cout<<"\nTotal no of sub-nets : "<< y; 	
 	list_traverse(pfirst);
 	cout<<endl<<endl;
 	return pfirst;
