@@ -67,8 +67,8 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 		if (is_ip_inside_range(ip->addr, current->start, current->end))
 		{
 			// Ip is inside range
-			cout << "The given ip" << ip->addr.f_oct << "." << ip->addr.s_oct << "." << ip->addr.t_oct << ".";
-			cout << ip->addr.fo_oct << "is inside the range" << endl;
+			cout << "The given ip \t" << ip->addr.f_oct << "." << ip->addr.s_oct << "." << ip->addr.t_oct << ".";
+			cout << ip->addr.fo_oct << "\tis inside the range" << endl;
 
 			cout << current->start.f_oct << "." << current->start.s_oct << "." << current->start.t_oct << ".";
 			cout << current->start.fo_oct << "   -   ";
@@ -87,40 +87,68 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 	}
 }
 
+void list_traverse(subnet *list){
+	if (list == NULL){
+		cout<<"NO data"<<endl;
+	}
+	else {
+		subnet  *pthis = list;
+		int i=1;
+		while (pthis != NULL){
+			cout<<endl<<endl<<i<<".\nStart phase " ;
+			cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct<<endl;
+		cout<<"End Phase : ";
+		cout<<pthis->end.f_oct<<"."<<pthis->end.s_oct<<"."<<pthis->end.t_oct<<"."<<pthis->end.fo_oct<<endl;
+			
+	pthis = pthis->next;
+	i++;
+	}
+	}
+}
+
 subnet *create_subnet(ip_addr *subnetb, add_factor factor)
-{        subnet *new_subnet = new subnet;
+{        subnet *new_subnet;
 		 subnet *pfirst = NULL;
 		 subnet *pthis = NULL;
+	 	 subnet subnet_t ;
+		subnet_t.start = subnetb->addr;	
+	 	int x = subnetb->cidr % 8;
+		int y = pow(2,x);	
 	
-	
-	 	for(int i=1;i<=subnetb->cidr;i++){
-			new_subnet->start.f_oct = subnetb->addr.f_oct + factor.beg.f_oct;
-			new_subnet->start.s_oct = subnetb->addr.s_oct + factor.beg.s_oct;
-   			new_subnet->start.t_oct = subnetb->addr.t_oct + factor.beg.t_oct;
-   			new_subnet->start.fo_oct = subnetb->addr.fo_oct + factor.beg.fo_oct;
-   			 
-   			new_subnet->end.f_oct = subnetb->addr.f_oct + factor.end.f_oct;
-		    new_subnet->end.s_oct = subnetb->addr.s_oct + factor.end.s_oct;
-		    new_subnet->end.t_oct = subnetb->addr.t_oct + factor.end.t_oct;
-		    new_subnet->end.fo_oct = subnetb->addr.fo_oct + factor.end.fo_oct;
+	 	for(int i=1;i<=y;i++) {
+
+			new_subnet = new subnet;
+			new_subnet->next = NULL;
 			
-			new_subnet -> next = NULL;
+			new_subnet->start.f_oct = subnet_t.start.f_oct + factor.beg.f_oct;
+			new_subnet->start.s_oct = subnet_t.start.s_oct + factor.beg.s_oct;
+   			new_subnet->start.t_oct = subnet_t.start.t_oct + factor.beg.t_oct;
+   			new_subnet->start.fo_oct = subnet_t.start.fo_oct + factor.beg.fo_oct;
+   			 
+   			new_subnet->end.f_oct = new_subnet->start.f_oct + factor.end.f_oct;
+		    new_subnet->end.s_oct = new_subnet->start.s_oct + factor.end.s_oct;
+		    new_subnet->end.t_oct = new_subnet->start.t_oct + factor.end.t_oct;
+		    new_subnet->end.fo_oct = new_subnet->start.fo_oct + factor.end.fo_oct;
+		 	subnet_t = *new_subnet;		
 
 		if (pfirst==NULL){
 				pfirst = new_subnet;
-				}
-				
-				else{
-				pthis = pfirst;
-				
-				while(pthis->next != NULL){
-				pthis = pthis->next;
-				}
-
-				pthis->next = new_subnet;
-				
-				}
 		}
+				
+		else{
+			pthis = pfirst;
+				
+			while(pthis->next != NULL){
+			pthis = pthis->next;
+			}
+
+			pthis->next = new_subnet;
+				
+			}
+	}	
+	
+	list_traverse(pfirst);
+	cout<<endl<<endl;
 	return pfirst;
 }
 
@@ -129,7 +157,6 @@ void create_subnetmask(ip_addr *ip)
 	add_factor R;
 	ip_addr network_add;
 	int cidr = ip->cidr;
-	network_add.cidr=cidr;
 	int q, r, mask_value = 0;
 	q = cidr / 8;
 	r = cidr % 8;
@@ -185,6 +212,7 @@ void create_subnetmask(ip_addr *ip)
 	cout<<network_add.addr.f_oct<<"."<<network_add.addr.s_oct<<".";
 	cout<<network_add.addr.t_oct<<"."<<network_add.addr.fo_oct<<endl;
 	*/
+	network_add.cidr = cidr;
 
 	subnet *sub_networks = create_subnet(&network_add, R);
 	match_subnet(ip, sub_networks);
