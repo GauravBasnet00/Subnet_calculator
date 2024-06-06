@@ -263,6 +263,7 @@ int main()
 
 	cout << "\n\nThe given ip is : \t";
 	print_octets(user_ip.addr);
+	cout<<"/"<<user_ip.cidr<<endl;
 	create_subnetmask(&user_ip);
 	return 0;
 }
