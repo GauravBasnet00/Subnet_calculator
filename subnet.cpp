@@ -108,10 +108,13 @@ void list_traverse(subnet *list){
 
 subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 {        subnet *new_subnet;
-		 subnet *pfirst = NULL;
+		 subnet *pfirst  = NULL;
 		 subnet *pthis = NULL;
 	 	 subnet subnet_t ;
-		subnet_t.start = subnetb->addr;	
+		subnet_t.start = subnetb->addr;
+	 	add_factor news = factor;
+		factor.beg = null_class;
+
 	 	int x = subnetb->cidr % 8;
 		int y = pow(2,x);	
 	
@@ -133,6 +136,7 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 
 		if (pfirst==NULL){
 				pfirst = new_subnet;
+				factor.beg = news.beg;
 		}
 				
 		else{
