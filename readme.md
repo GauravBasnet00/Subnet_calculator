@@ -22,9 +22,16 @@ The main features of this project are:
 3. It then calculates the addition factor for individual class to find the network address and an another factor to find the broadcast address.
 4. The calculated ip-address range is then store in a `Single` link list.
 5. Then the given ip-address is checked to the linked list and the range is calculated
+6. After the range is calculated, it checks which range does the input address belong to using the `is_ip_inside_range` function.
+7. If the ip is inside the range of the calculated subnet network, it checks whether it is a usable or an unsable network or braodcast address.
+8. If it does not find the input ip-address in the calculated subnet network, it says that the given ip-address does not exist in the range.  
 
 ## **Preview**
 
-![Sample Output](./Images/Output.png)
+![Exist Output](./Images/Exist-Output.png)
 
-<p align='center'>Sample Output</p>
+<p align='center'>ip-address exists in range</p>
+
+![No Exist Output](./Images/No-Exist-Output.png)
+
+<p align='center'>ip-address does not exist in range</p>
