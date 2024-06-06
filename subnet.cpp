@@ -183,7 +183,7 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor){
 	}	
 	
 	cout<<endl<<endl;
-	cout<<"Total no of hosts : "<<pow(2,32-cidr);
+	cout<<"Total no of hosts : "<<pow(2,8-x);
 	cout<<"\nTotal no of sub-nets : "<< y; 	
 	cout<<"\nSubnet Mask : ";
 	print_octets(subnetb->mask);
