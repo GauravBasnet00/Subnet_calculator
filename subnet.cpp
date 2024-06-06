@@ -4,31 +4,28 @@
 
 using namespace std;
 
-struct base_ip
-{
+struct base_ip{
 	unsigned int f_oct, s_oct, t_oct, fo_oct;
 };
 
-struct ip_addr
-{
+struct ip_addr{
 	base_ip addr;
 	unsigned int cidr;
 	base_ip mask;
 };
 
-struct subnet
-{
+struct subnet{
 	base_ip start;
 	base_ip end;
-	base_ip mask;
+	unsigned int cidr;
 	subnet *next;
 };
 
-struct add_factor
-{
+struct add_factor{
 	base_ip beg;
 	base_ip end;
 };
+
 
 // standard subnet mask for the class A - C
 const base_ip classA = {255, 0, 0, 0};
@@ -36,12 +33,17 @@ const base_ip classB = {255, 255, 0, 0};
 const base_ip classC = {255, 255, 255, 0};
 
 const base_ip null_class = {0, 0, 0, 0};
-const base_ip all_active = {255, 255, 255, 255};
 
 // invert subnet mask for the addition to find ranges
 const base_ip i_classA = {0, 255, 255, 255};
 const base_ip i_classB = {0, 0, 255, 255};
 const base_ip i_classC = {0, 0, 0, 255};
+
+
+void print_octets(base_ip octet){
+	cout<<octet.f_oct<<"."<<octet.s_oct<<"."<<octet.t_oct<<"."<<octet.fo_oct;
+}
+
 
 // Helper function to check if ip is inside the range or not. or bigger than ending address.
 bool is_ip_inside_range(base_ip addr, base_ip start, base_ip end)
@@ -84,10 +86,15 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 				cout<<"It is not an usable IP as it is a broadcast address.";
 			}
 			else
-				cout<<"\n\nIt is a usable address with following as : \n Network id :  "<< current->start.f_oct << "." ;
-				cout<< current->start.s_oct << "." << current->start.t_oct << "."<< current->start.fo_oct << "\n Broadcast address : ";
-				cout << current->end.f_oct << "." << current->end.s_oct << "." << current->end.t_oct << ".";
-				cout << current->end.fo_oct << endl<<endl;
+				cout<<"\n\nIt is a usable address with following as : \n Network id :  ";
+				print_octets(current->start);
+				cout << "\n Broadcast address : ";
+				print_octets(current->end);
+				cout<<endl;
+
+				cout<<endl<<" Host IP range : \n ";	
+				cout<<current->start.f_oct<<"."<<current->start.s_oct<<"."<<current->start.t_oct<<"."<<current->start.fo_oct+1<<" - ";
+				cout<<current->end.f_oct<<"."<<current->end.s_oct<<"."<<current->end.t_oct<<"."<<current->end.fo_oct-1<<endl;
 			found = true;
 			
 		}
@@ -95,8 +102,9 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 	}
 	if (!found)
 	{
-		cout << "The given IP " << ip->addr.f_oct << "." << ip->addr.s_oct << "." << ip->addr.t_oct << ".";
-		cout << ip->addr.fo_oct << " does not belong in any subnet." << endl;
+		cout << "The given IP ";
+		print_octets(ip->addr);
+		cout<<" does not belong in any subnet." << endl;
 	}
 }
 
@@ -108,26 +116,34 @@ void list_traverse(subnet *list){
 		subnet  *pthis = list;
 		int i=1;
 		cout<<endl<<endl;
-		cout<<"Index\t Network Id \t\tBroadcast Id"<<endl<<endl;
+		int cidr = pthis->cidr;
+		int x = cidr / 8;
+		cout<<"Index\t\t Network Id \t\t\tUsable Host Address  \t\t\t\tBroadcast Id"<<endl<<endl;
 		while (pthis != NULL){
-			cout<<i<<". \t  ";
-			cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct<<"\t\t";
-		cout<<pthis->end.f_oct<<"."<<pthis->end.s_oct<<"."<<pthis->end.t_oct<<"."<<pthis->end.fo_oct<<endl;
+			cout<<i<<". \t\t  ";
+			print_octets(pthis->start);
+			cout<<"\t\t\t";
+
+			cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct+1<<" - ";
+			cout<<pthis->end.f_oct<<"."<<pthis->end.s_oct<<"."<<pthis->end.t_oct<<"."<<pthis->end.fo_oct-1<<"\t\t\t";
 			
-	pthis = pthis->next;
-	i++;
-	}
+			print_octets(pthis->end);
+			cout<<endl;
+
+			pthis = pthis->next;
+			i++;
+		}
 	}
 }
 
-subnet *create_subnet(ip_addr *subnetb, add_factor factor)
-{        subnet *new_subnet;
-		 subnet *pfirst  = NULL;
-		 subnet *pthis = NULL;
-	 	 subnet subnet_t ;
-		 subnet_t.start = subnetb->addr;
-	 	 add_factor news = factor;
-		 factor.beg = null_class;
+subnet *create_subnet(ip_addr *subnetb, add_factor factor){        
+		subnet *new_subnet;
+		subnet *pfirst  = NULL;
+		subnet *pthis = NULL;
+	 	subnet subnet_t ;
+		subnet_t.start = subnetb->addr;
+	 	add_factor news = factor;
+		factor.beg = null_class;   // it is set to null class as an exception to generate the first subnetid 
 		int cidr = subnetb->cidr;
 	 	int x = cidr % 8;
 		int y = pow(2,x);	
@@ -136,7 +152,8 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 
 			new_subnet = new subnet;
 			new_subnet->next = NULL;
-			
+			new_subnet->cidr = subnetb->cidr;
+	
 			new_subnet->start.f_oct = subnet_t.start.f_oct + factor.beg.f_oct;
 			new_subnet->start.s_oct = subnet_t.start.s_oct + factor.beg.s_oct;
    			new_subnet->start.t_oct = subnet_t.start.t_oct + factor.beg.t_oct;
@@ -168,6 +185,10 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 	cout<<endl<<endl;
 	cout<<"Total no of hosts : "<<pow(2,32-cidr);
 	cout<<"\nTotal no of sub-nets : "<< y; 	
+	cout<<"\nSubnet Mask : ";
+	print_octets(subnetb->mask);
+	cout<<endl;
+
 	list_traverse(pfirst);
 	cout<<endl<<endl;
 	return pfirst;
@@ -217,24 +238,8 @@ void create_subnetmask(ip_addr *ip)
 		network_add = {ip->addr.f_oct, ip->addr.s_oct, ip->addr.t_oct, 0};
 	}
 
-	/* cout<<"\nThe subnet mask is : ";
-	cout<<ip->mask.f_oct<<"."<<ip->mask.s_oct<<"."<<ip->mask.t_oct;
-	cout<<"."<<ip->mask.fo_oct<<endl;
-
-	cout<<"\nThe Addition factor R1 : ";
-	cout<<R.beg.f_oct<<"."<<R.beg.s_oct<<"."<<R.beg.t_oct;
-	cout<<"."<<R.beg.fo_oct<<endl;
-
-	cout<<"\nThe addition factor R2 : ";
-	cout<<R.end.f_oct<<"."<<R.end.s_oct<<"."<<R.end.t_oct;
-	cout<<"."<<R.end.fo_oct<<endl;
-
-	cout<<"\nThe network addresss is : ";
-	cout<<network_add.addr.f_oct<<"."<<network_add.addr.s_oct<<".";
-	cout<<network_add.addr.t_oct<<"."<<network_add.addr.fo_oct<<endl;
-	*/
 	network_add.cidr = cidr;
-
+	network_add.mask = ip->mask;
 	subnet *sub_networks = create_subnet(&network_add, R);
 	match_subnet(ip, sub_networks);
 }
@@ -255,8 +260,7 @@ int main()
 	cin >> user_ip.cidr;
 
 	cout << "\n\nThe given ip is : \t";
-	cout << user_ip.addr.f_oct << "." << user_ip.addr.s_oct << "." << user_ip.addr.t_oct;
-	cout << "." << user_ip.addr.fo_oct << " /" << user_ip.cidr << endl;
+	print_octets(user_ip.addr);
 	create_subnetmask(&user_ip);
 	return 0;
 }
