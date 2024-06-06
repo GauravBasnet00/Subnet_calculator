@@ -84,10 +84,10 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 				cout<<"It is not an usable IP as it is a broadcast address.";
 			}
 			else
-				cout<<"It is a usable address whose network ip is: "<< current->start.f_oct << "." ;
-				cout<< current->start.s_oct << "." << current->start.t_oct << "."<< current->start.fo_oct << " and the broadcast address is: ";
+				cout<<"\n\nIt is a usable address with following as : \n Network id :  "<< current->start.f_oct << "." ;
+				cout<< current->start.s_oct << "." << current->start.t_oct << "."<< current->start.fo_oct << "\n Broadcast address : ";
 				cout << current->end.f_oct << "." << current->end.s_oct << "." << current->end.t_oct << ".";
-				cout << current->end.fo_oct << endl;
+				cout << current->end.fo_oct << endl<<endl;
 			found = true;
 			
 		}
@@ -107,10 +107,11 @@ void list_traverse(subnet *list){
 	else {
 		subnet  *pthis = list;
 		int i=1;
+		cout<<endl;
+		cout<<"Index\t Network Id \t\tBroadcast Id"<<endl<<endl;
 		while (pthis != NULL){
-			cout<<endl<<endl<<i<<".\nStart phase " ;
-			cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct<<endl;
-		cout<<"End Phase : ";
+			cout<<i<<". \t  ";
+			cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct<<"\t\t";
 		cout<<pthis->end.f_oct<<"."<<pthis->end.s_oct<<"."<<pthis->end.t_oct<<"."<<pthis->end.fo_oct<<endl;
 			
 	pthis = pthis->next;
@@ -124,9 +125,9 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 		 subnet *pfirst  = NULL;
 		 subnet *pthis = NULL;
 	 	 subnet subnet_t ;
-		subnet_t.start = subnetb->addr;
-	 	add_factor news = factor;
-		factor.beg = null_class;
+		 subnet_t.start = subnetb->addr;
+	 	 add_factor news = factor;
+		 factor.beg = null_class;
 
 	 	int x = subnetb->cidr % 8;
 		int y = pow(2,x);	
@@ -164,6 +165,9 @@ subnet *create_subnet(ip_addr *subnetb, add_factor factor)
 			}
 	}	
 	
+	cout<<endl<<endl;
+	cout<<"Total no of hosts : "<<pow(2,8-x);
+	cout<<"\nTotal no of subsets : "<< y; 	
 	list_traverse(pfirst);
 	cout<<endl<<endl;
 	return pfirst;
