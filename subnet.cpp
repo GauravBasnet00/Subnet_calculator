@@ -214,8 +214,16 @@ void create_subnetmask(ip_addr *ip)
 
 	for (int i = 0; i < r; i++)
 		mask_value += pow(2, 7 - i);
-
-	if (q == 1)
+	
+	if (q == 0){
+		ip->mask = null_class;
+		ip->mask.f_oct = mask_value;
+		R.beg = null_class;
+		R.beg.f_oct = no_hosts;
+		R.end = {no_hosts-1, 255,255,255};
+		network_add = {0,0,0,0};
+	}
+	else if (q == 1)
 	{
 		ip->mask = classA;
 		ip->mask.s_oct = mask_value;
