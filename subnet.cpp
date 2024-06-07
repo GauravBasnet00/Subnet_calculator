@@ -94,8 +94,13 @@ void match_subnet(ip_addr *ip, subnet *sub_networks)
 				cout<<endl;
 
 				cout<<endl<<" Host IP range : \n ";	
-				cout<<current->start.f_oct<<"."<<current->start.s_oct<<"."<<current->start.t_oct<<"."<<current->start.fo_oct+1<<" - ";
-				cout<<current->end.f_oct<<"."<<current->end.s_oct<<"."<<current->end.t_oct<<"."<<current->end.fo_oct-1<<endl;
+				if (current->cidr == 31){
+					cout<<"\nNo hosts possible for the subnetwork.\n";
+				}
+				else {
+					cout<<current->start.f_oct<<"."<<current->start.s_oct<<"."<<current->start.t_oct<<"."<<current->start.fo_oct+1<<" - ";
+					cout<<current->end.f_oct<<"."<<current->end.s_oct<<"."<<current->end.t_oct<<"."<<current->end.fo_oct-1<<endl;
+				}
 			found = true;
 			
 		}
@@ -118,16 +123,17 @@ void list_traverse(subnet *list){
 		int i=1;
 		cout<<endl<<endl;
 		int cidr = pthis->cidr;
-		int x = cidr / 8;
 		cout<<"Index\t\t Network Id \t\t\tUsable Host Address  \t\t\t\tBroadcast Id"<<endl<<endl;
 		while (pthis != NULL){
 			cout<<i<<". \t\t  ";
 			print_octets(pthis->start);
 			cout<<"\t\t\t";
-
-			cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct+1<<" - ";
-			cout<<pthis->end.f_oct<<"."<<pthis->end.s_oct<<"."<<pthis->end.t_oct<<"."<<pthis->end.fo_oct-1<<"\t\t\t";
-			
+			if (cidr == 31)
+				cout<<"No hosts possible\t\t\t\t";
+			else {
+				cout<<pthis->start.f_oct<<"."<<pthis->start.s_oct<<"."<<pthis->start.t_oct<<"."<<pthis->start.fo_oct+1<<" - ";
+				cout<<pthis->end.f_oct<<"."<<pthis->end.s_oct<<"."<<pthis->end.t_oct<<"."<<pthis->end.fo_oct-1<<"\t\t\t";
+			}
 			print_octets(pthis->end);
 			cout<<endl;
 
@@ -264,6 +270,13 @@ int main()
 	cout << "\n\nThe given ip is : \t";
 	print_octets(user_ip.addr);
 	cout<<"/"<<user_ip.cidr<<endl;
-	create_subnetmask(&user_ip);
+	if (user_ip.cidr == 32){
+		cout<<"\nThe give ip  :  ";
+		print_octets(user_ip.addr);
+		cout<<" doesn't have any useable ip address. And it lacks the valid sub-networks as well."<<endl;
+	}
+	else 
+		create_subnetmask(&user_ip);
+
 	return 0;
 }
