@@ -4,7 +4,7 @@
 
 - [**Buddha Tamang**](https://github.com/Bud10)
 - [**Gaurav Basnet**](https://github.com/GauravBasnet00)
-- [**Gyan Hari Dahal**](https://github.com/Varl-Starkiller)
+- [**Gyan Hari Dahal**](https://github.com/gyanhari)
 - [**Yubaraj Poudel**](https://github.com/poudel-yubaraj)
 
 ## **Features**
