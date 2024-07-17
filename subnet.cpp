@@ -220,7 +220,7 @@ void create_subnetmask(ip_addr *ip)
 		ip->mask.f_oct = mask_value;
 		R.beg = null_class;
 		R.beg.f_oct = no_hosts;
-		R.end = {no_hosts-1, 255,255,255};
+		R.end = {(unsigned int)no_hosts-1, 255,255,255};
 		network_add = {0,0,0,0};
 	}
 	else if (q == 1)
@@ -260,24 +260,60 @@ void create_subnetmask(ip_addr *ip)
 	match_subnet(ip, sub_networks);
 }
 
+unsigned int input_octet(bool x=0 ){
+	unsigned int val;
+	bool err = 0;
+	if (x){
+		 do {
+			if (err){
+				cout<<"\nError occured during processing.\nNote :  Cidr value should be in range 1-32.";
+				cout<<"\nEnter the value again : ";
+			}
+			cin>>val;
+			err = 1;
+		}while (val > 32);
+	}
+	else {
+		do {
+			if (err){
+				cout<<"\nError occured during processing.\nNote : IP octet value should be in range 0-255.";
+				cout<<"\nEnter the value again : ";
+			}
+			cin>>val;
+			err = 1;
+			
+			}while (val > 255);
+	}
+	return val;
+}
+
 int main()
 {
 	ip_addr user_ip;
 	cout << "\nEnter the given ip and the cidr : " << endl;
 	cout << "\nEnter the first octet : ";
-	cin >> user_ip.addr.f_oct;
+	user_ip.addr.f_oct = input_octet();
 	cout << "\nEnter the second octet : ";
-	cin >> user_ip.addr.s_oct;
+	user_ip.addr.s_oct = input_octet();
 	cout << "\nEnter the third octet : ";
-	cin >> user_ip.addr.t_oct;
+	user_ip.addr.t_oct = input_octet();
 	cout << "\nEnter the fourth octet : ";
-	cin >> user_ip.addr.fo_oct;
+	user_ip.addr.fo_oct = input_octet();
 	cout << "\n\nEnter the cidr : ";
-	cin >> user_ip.cidr;
+	user_ip.cidr = input_octet(1);
 
 	cout << "\n\nThe given ip is : \t";
 	print_octets(user_ip.addr);
 	cout<<"/"<<user_ip.cidr<<endl;
+	
+	if (user_ip.addr.f_oct == 0 ){
+		cout<<"\nThe give ip is an exceptional Zero addresss and cannot be used directly."<<endl;
+	} 
+	else if (user_ip.addr.f_oct == 127 && user_ip.cidr > 7){
+		cout<<"\nThe given ip section is reserved for the loopback ip section."<<endl;
+	}
+
+
 	if (user_ip.cidr == 32){
 		cout<<"\nThe give ip  :  ";
 		print_octets(user_ip.addr);
